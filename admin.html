@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - HospEase</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .modal-content input, .modal-content button {
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">HospEase</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="admin.html" class="active">Admin</a></li>
+      <li><a href="doctors.html">Doctors</a></li>
+      <li><a href="login.html">Login</a></li>
+    </ul>
+  </nav>
+
+  <!-- Admin Dashboard -->
+  <section class="admin-dashboard">
+    <h2 class="dashboard-title">Admin Dashboard</h2>
+    <div class="admin-cards">
+      <div class="admin-card">
+        <i class="ph ph-user-circle"></i>
+        <h3>Manage Patients</h3>
+        <p>View, add, or update patient records.</p>
+        <button class="btn" onclick="openModal('patientModal')">Go</button>
+      </div>
+
+      <div class="admin-card">
+        <i class="ph ph-calendar-check"></i>
+        <h3>Appointments</h3>
+        <p>Schedule or manage doctor appointments.</p>
+        <button class="btn" onclick="openModal('appointmentModal')">Go</button>
+      </div>
+
+      <div class="admin-card">
+        <i class="ph ph-stethoscope"></i>
+        <h3>Doctors</h3>
+        <p>Assign, edit or remove doctor details.</p>
+        <button class="btn" onclick="openModal('doctorModal')">Go</button>
+      </div>
+
+      <div class="admin-card">
+        <i class="ph ph-users-three"></i>
+        <h3>Staff Management</h3>
+        <p>Coordinate nurses and administrative staff.</p>
+        <button class="btn" onclick="openModal('staffModal')">Go</button>
+      </div>
+
+      <div class="admin-card">
+        <i class="ph ph-siren"></i>
+        <h3>Emergency Cases</h3>
+        <p>Manage and track emergency response units.</p>
+        <button class="btn" onclick="openModal('emergencyModal')">Go</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal Forms -->
+
+  <!-- Patient Modal -->
+  <div id="patientModal" class="modal">
+    <form id="patientForm" class="modal-content">
+      <h3>Add Patient</h3>
+      <input name="name" placeholder="Name" required />
+      <input name="email" placeholder="Email" required />
+      <input name="phone" placeholder="Phone" required />
+      <input name="disease" placeholder="Disease" required />
+      <button type="submit">Submit</button>
+      <button type="button" onclick="closeModal('patientModal')">Close</button>
+    </form>
+  </div>
+
+  <!-- Doctor Modal -->
+  <div id="doctorModal" class="modal">
+    <form id="doctorForm" class="modal-content">
+      <h3>Add Doctor</h3>
+      <input name="name" placeholder="Name" required />
+      <input name="email" placeholder="Email" required />
+      <input name="phone" placeholder="Phone" required />
+      <input name="specialty" placeholder="Specialty" required />
+      <input name="photo" placeholder="Photo URL (optional)" />
+      <button type="submit">Submit</button>
+      <button type="button" onclick="closeModal('doctorModal')">Close</button>
+    </form>
+  </div>
+
+  <!-- Appointment Modal -->
+  <div id="appointmentModal" class="modal">
+    <form id="appointmentForm" class="modal-content">
+      <h3>Schedule Appointment</h3>
+      <input name="patientName" placeholder="Patient Name" required />
+      <input name="patientEmail" placeholder="Patient Email" required />
+      <input name="doctorId" placeholder="Doctor ID" required />
+      <input name="time" type="datetime-local" required />
+      <button type="submit">Submit</button>
+      <button type="button" onclick="closeModal('appointmentModal')">Close</button>
+    </form>
+  </div>
+
+  <!-- Staff Modal -->
+  <div id="staffModal" class="modal">
+    <form id="staffForm" class="modal-content">
+      <h3>Add Staff Member</h3>
+      <input name="name" placeholder="Name" required />
+      <input name="email" placeholder="Email" required />
+      <input name="phone" placeholder="Phone" required />
+      <input name="role" placeholder="Role" required />
+      <button type="submit">Submit</button>
+      <button type="button" onclick="closeModal('staffModal')">Close</button>
+    </form>
+  </div>
+
+  <!-- Emergency Modal -->
+  <div id="emergencyModal" class="modal">
+    <form id="emergencyForm" class="modal-content">
+      <h3>Log Emergency Case</h3>
+      <input name="caseId" placeholder="Case ID" required />
+      <input name="patientName" placeholder="Patient Name" required />
+      <input name="type" placeholder="Emergency Type" required />
+      <button type="submit">Submit</button>
+      <button type="button" onclick="closeModal('emergencyModal')">Close</button>
+    </form>
+  </div>
+
+  <!-- Data Tables -->
+  <section class="data-tables">
+    <h2>Records</h2>
+
+    <div class="table-container" id="patientsTableContainer">
+      <h3>Patients</h3>
+      <table id="patientsTable"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Disease</th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <div class="table-container" id="doctorsTableContainer">
+      <h3>Doctors</h3>
+      <table id="doctorsTable"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Specialty</th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <div class="table-container" id="appointmentsTableContainer">
+      <h3>Appointments</h3>
+      <table id="appointmentsTable"><thead><tr><th>Patient</th><th>Email</th><th>Doctor ID</th><th>Time</th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <div class="table-container" id="staffTableContainer">
+      <h3>Staff</h3>
+      <table id="staffTable"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Role</th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <div class="table-container" id="emergencyTableContainer">
+      <h3>Emergencies</h3>
+      <table id="emergencyTable"><thead><tr><th>Case ID</th><th>Patient</th><th>Type</th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="logo">HospEase</div>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="admin.html">Admin</a></li>
+        <li><a href="doctors.html">Doctors</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="signup.html">Signup</a></li>
+      </ul>
+      <div class="footer-text">&copy; 2025 HospEase. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    const base = 'http://localhost:5000';
+
+    function openModal(id) {
+      document.getElementById(id).style.display = 'flex';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    document.getElementById('patientForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const body = {
+        name: e.target.name.value,
+        email: e.target.email.value,
+        phone: e.target.phone.value,
+        disease: e.target.disease.value
+      };
+      await fetch(base + '/api/patients', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
+      });
+      alert('Patient added');
+      e.target.reset();
+      closeModal('patientModal');
+      loadTables();
+    });
+
+    document.getElementById('doctorForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const body = {
+        name: e.target.name.value,
+        specialty: e.target.specialty.value,
+        email: e.target.email.value,
+        phone: e.target.phone.value,
+        photo: e.target.photo.value
+      };
+      await fetch(base + '/api/doctors', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
+      });
+      alert('Doctor added');
+      e.target.reset();
+      closeModal('doctorModal');
+      loadTables();
+    });
+
+    document.getElementById('appointmentForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const body = {
+        patientName: e.target.patientName.value,
+        patientEmail: e.target.patientEmail.value,
+        doctorId: e.target.doctorId.value,
+        time: e.target.time.value
+      };
+      await fetch(base + '/api/appointments', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
+      });
+      alert('Appointment created');
+      e.target.reset();
+      closeModal('appointmentModal');
+      loadTables();
+    });
+
+    document.getElementById('staffForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const body = {
+        name: e.target.name.value,
+        role: e.target.role.value,
+        email: e.target.email.value,
+        phone: e.target.phone.value
+      };
+      await fetch(base + '/api/staff', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
+      });
+      alert('Staff added');
+      e.target.reset();
+      closeModal('staffModal');
+      loadTables();
+    });
+
+    document.getElementById('emergencyForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const body = {
+        caseId: e.target.caseId.value,
+        patientName: e.target.patientName.value,
+        type: e.target.type.value
+      };
+      await fetch(base + '/api/emergencies', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
+      });
+      alert('Emergency logged');
+      e.target.reset();
+      closeModal('emergencyModal');
+      loadTables();
+    });
+
+    window.onload = loadTables;
+
+    function loadTables() {
+      loadTable('patients', 'patientsTable', ['name','email','phone','disease']);
+      loadTable('doctors', 'doctorsTable', ['name','email','phone','specialty']);
+      loadTable('appointments', 'appointmentsTable', ['patientName','patientEmail','doctorId','time']);
+      loadTable('staff', 'staffTable', ['name','email','phone','role']);
+      loadTable('emergencies', 'emergencyTable', ['caseId','patientName','type']);
+    }
+
+    async function loadTable(endpoint, tableId, fields) {
+      const res = await fetch(`${base}/api/${endpoint}`);
+      const data = await res.json();
+      const tbody = document.querySelector(`#${tableId} tbody`);
+      tbody.innerHTML = '';
+      data.forEach(item => {
+        const tr = document.createElement('tr');
+        fields.forEach(f => {
+          const td = document.createElement('td');
+          td.textContent = item[f] || '-';
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+  </script>
+
+</body>
+</html>

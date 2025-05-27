@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Doctors - HospEase</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script> <!-- Icon CDN -->
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">HospEase</div>
+    <ul class="nav-links">
+       <li><a href="index.html">Home</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="admin.html">Admin</a></li>
+        <li><a href="doctors.html">Doctors</a></li>
+        <li><a href="login.html">Login</a></li>
+        <!-- <li><a href="#">Signup</a></li> -->
+    </ul>
+  </nav>
+
+  <!-- Doctors Section -->
+  <section class="doctors-section">
+    <h2 class="doctors-header">Meet Our Doctors</h2>
+
+    <div class="doctor-cards" id="doctorCards">
+      <!-- Doctor cards injected here -->
+    </div>
+  </section>
+
+  <!-- Appointment Popup Modal -->
+  <div id="appointmentModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h3>Book Appointment</h3>
+      <form id="appointmentForm" onsubmit="submitAppointment(event)">
+        <p>Doctor: <span id="selectedDoctor"></span></p>
+        <label for="patientName">Your Name:</label>
+        <input type="text" id="patientName" name="patientName" required />
+        <label for="appointmentTime">Appointment Time:</label>
+        <input type="datetime-local" id="appointmentTime" name="appointmentTime" required />
+        <button type="submit" class="btn">Submit</button>
+      </form>
+      <div id="formMessage"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="logo">HospEase</div>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="admin.html">Admin</a></li>
+        <li><a href="doctors.html">Doctors</a></li>
+        <li><a href="login.html">Login</a></li>
+        <!-- <li><a href="#">Signup</a></li> -->
+      </ul>
+      <div class="footer-text">&copy; 2025 HospEase. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    const doctors = [
+      {
+        name: "Dr. Sarah Johnson",
+        specialty: "Cardiologist",
+        email: "sarah.johnson@example.com",
+        phone: "+880123456789",
+        photo: "https://randomuser.me/api/portraits/women/44.jpg"
+      },
+      {
+        name: "Dr. James Williams",
+        specialty: "Neurologist",
+        email: "james.williams@example.com",
+        phone: "+880987654321",
+        photo: "https://randomuser.me/api/portraits/men/32.jpg"
+      },
+      {
+        name: "Dr. Ayesha Rahman",
+        specialty: "Pediatrician",
+        email: "ayesha.rahman@example.com",
+        phone: "+880112233445",
+        photo: "https://randomuser.me/api/portraits/women/65.jpg"
+      },
+      {
+        name: "Dr. Michael Smith",
+        specialty: "General Surgeon",
+        email: "michael.smith@example.com",
+        phone: "+880556677889",
+        photo: "https://randomuser.me/api/portraits/men/50.jpg"
+      },
+      {
+        name: "Dr. Fatima Begum",
+        specialty: "Gynecologist",
+        email: "fatima.begum@example.com",
+        phone: "+880998877665",
+        photo: "https://randomuser.me/api/portraits/women/22.jpg"
+      }
+    ];
+
+    function displayDoctors() {
+      const container = document.getElementById('doctorCards');
+      container.innerHTML = '';
+      doctors.forEach(doc => {
+        container.innerHTML += `
+          <div class="doctor-card">
+            <img src="${doc.photo}" alt="${doc.name}" class="doctor-photo" />
+            <div class="doctor-name">${doc.name}</div>
+            <div class="doctor-specialty">${doc.specialty}</div>
+            <div class="doctor-contact">📧 ${doc.email}</div>
+            <div class="doctor-contact">📞 ${doc.phone}</div>
+            <button class="btn appointment-btn" onclick="openModal('${doc.name}')">Get Appointment</button>
+          </div>
+        `;
+      });
+    }
+
+    function openModal(doctorName) {
+      document.getElementById('selectedDoctor').innerText = doctorName;
+      document.getElementById('appointmentForm').reset();
+      document.getElementById('formMessage').innerText = '';
+      document.getElementById('appointmentModal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('appointmentModal').style.display = 'none';
+    }
+
+    // Handle form submit (simulate saving to DB)
+    function submitAppointment(event) {
+      event.preventDefault();
+
+      const doctor = document.getElementById('selectedDoctor').innerText;
+      const patientName = document.getElementById('patientName').value.trim();
+      const appointmentTime = document.getElementById('appointmentTime').value;
+
+      if (!patientName || !appointmentTime) {
+        alert('Please fill in all fields.');
+        return;
+      }
+
+      // TODO: Replace this with actual backend API call to save data
+      console.log('Appointment booked:', {
+        doctor,
+        patientName,
+        appointmentTime
+      });
+
+      document.getElementById('formMessage').innerText = 'Appointment successfully booked!';
+      setTimeout(() => {
+        closeModal();
+      }, 2000);
+    }
+
+    // Close modal when clicking outside the modal content
+    window.onclick = function(event) {
+      const modal = document.getElementById('appointmentModal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    };
+
+    displayDoctors();
+  </script>
+
+</body>
+</html>

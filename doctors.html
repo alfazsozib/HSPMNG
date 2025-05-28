@@ -18,14 +18,12 @@
         <li><a href="admin.html">Admin</a></li>
         <li><a href="doctors.html">Doctors</a></li>
         <li><a href="login.html">Login</a></li>
-        <!-- <li><a href="#">Signup</a></li> -->
     </ul>
   </nav>
 
   <!-- Doctors Section -->
   <section class="doctors-section">
     <h2 class="doctors-header">Meet Our Doctors</h2>
-
     <div class="doctor-cards" id="doctorCards">
       <!-- Doctor cards injected here -->
     </div>
@@ -40,8 +38,13 @@
         <p>Doctor: <span id="selectedDoctor"></span></p>
         <label for="patientName">Your Name:</label>
         <input type="text" id="patientName" name="patientName" required />
+
+        <label for="patientEmail">Your Email:</label>
+        <input type="email" id="patientEmail" name="patientEmail" required />
+
         <label for="appointmentTime">Appointment Time:</label>
         <input type="datetime-local" id="appointmentTime" name="appointmentTime" required />
+        
         <button type="submit" class="btn">Submit</button>
       </form>
       <div id="formMessage"></div>
@@ -58,106 +61,98 @@
         <li><a href="admin.html">Admin</a></li>
         <li><a href="doctors.html">Doctors</a></li>
         <li><a href="login.html">Login</a></li>
-        <!-- <li><a href="#">Signup</a></li> -->
       </ul>
       <div class="footer-text">&copy; 2025 HospEase. All rights reserved.</div>
     </div>
   </footer>
 
   <script>
-    const doctors = [
-      {
-        name: "Dr. Sarah Johnson",
-        specialty: "Cardiologist",
-        email: "sarah.johnson@example.com",
-        phone: "+880123456789",
-        photo: "https://randomuser.me/api/portraits/women/44.jpg"
-      },
-      {
-        name: "Dr. James Williams",
-        specialty: "Neurologist",
-        email: "james.williams@example.com",
-        phone: "+880987654321",
-        photo: "https://randomuser.me/api/portraits/men/32.jpg"
-      },
-      {
-        name: "Dr. Ayesha Rahman",
-        specialty: "Pediatrician",
-        email: "ayesha.rahman@example.com",
-        phone: "+880112233445",
-        photo: "https://randomuser.me/api/portraits/women/65.jpg"
-      },
-      {
-        name: "Dr. Michael Smith",
-        specialty: "General Surgeon",
-        email: "michael.smith@example.com",
-        phone: "+880556677889",
-        photo: "https://randomuser.me/api/portraits/men/50.jpg"
-      },
-      {
-        name: "Dr. Fatima Begum",
-        specialty: "Gynecologist",
-        email: "fatima.begum@example.com",
-        phone: "+880998877665",
-        photo: "https://randomuser.me/api/portraits/women/22.jpg"
-      }
-    ];
+    const base = 'http://localhost:5000';
 
-    function displayDoctors() {
+    // Fetch doctors from backend
+    async function fetchDoctors() {
+      try {
+        const res = await fetch(base + '/api/doctors');
+        const doctors = await res.json();
+        displayDoctors(doctors);
+      } catch (err) {
+        console.error('Error loading doctors:', err);
+        document.getElementById('doctorCards').innerHTML = '<p>Error loading doctors.</p>';
+      }
+    }
+
+    // Display doctors dynamically
+    function displayDoctors(doctors) {
       const container = document.getElementById('doctorCards');
       container.innerHTML = '';
       doctors.forEach(doc => {
         container.innerHTML += `
           <div class="doctor-card">
-            <img src="${doc.photo}" alt="${doc.name}" class="doctor-photo" />
+            <img src="${doc.photo || 'https://via.placeholder.com/150'}" alt="${doc.name}" class="doctor-photo" />
             <div class="doctor-name">${doc.name}</div>
             <div class="doctor-specialty">${doc.specialty}</div>
             <div class="doctor-contact">📧 ${doc.email}</div>
             <div class="doctor-contact">📞 ${doc.phone}</div>
-            <button class="btn appointment-btn" onclick="openModal('${doc.name}')">Get Appointment</button>
+            <button class="btn appointment-btn" onclick="openModal('${doc.name}', '${doc._id}')">Get Appointment</button>
           </div>
         `;
       });
     }
 
-    function openModal(doctorName) {
+    // Open appointment modal
+    function openModal(doctorName, doctorId) {
       document.getElementById('selectedDoctor').innerText = doctorName;
+      document.getElementById('appointmentForm').dataset.doctorId = doctorId;
       document.getElementById('appointmentForm').reset();
       document.getElementById('formMessage').innerText = '';
       document.getElementById('appointmentModal').style.display = 'block';
     }
 
+    // Close appointment modal
     function closeModal() {
       document.getElementById('appointmentModal').style.display = 'none';
     }
 
-    // Handle form submit (simulate saving to DB)
-    function submitAppointment(event) {
+    // Submit appointment to backend
+    async function submitAppointment(event) {
       event.preventDefault();
 
-      const doctor = document.getElementById('selectedDoctor').innerText;
       const patientName = document.getElementById('patientName').value.trim();
+      const patientEmail = document.getElementById('patientEmail').value.trim();
       const appointmentTime = document.getElementById('appointmentTime').value;
+      const doctorId = document.getElementById('appointmentForm').dataset.doctorId;
 
-      if (!patientName || !appointmentTime) {
+      if (!patientName || !patientEmail || !appointmentTime || !doctorId) {
         alert('Please fill in all fields.');
         return;
       }
 
-      // TODO: Replace this with actual backend API call to save data
-      console.log('Appointment booked:', {
-        doctor,
-        patientName,
-        appointmentTime
-      });
+      try {
+        const res = await fetch(base + '/api/appointments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            patientName,
+            patientEmail,
+            doctorId,
+            time: appointmentTime
+          })
+        });
 
-      document.getElementById('formMessage').innerText = 'Appointment successfully booked!';
-      setTimeout(() => {
-        closeModal();
-      }, 2000);
+        const result = await res.json();
+        if (result._id) {
+          document.getElementById('formMessage').innerText = 'Appointment successfully booked!';
+          setTimeout(closeModal, 2000);
+        } else {
+          document.getElementById('formMessage').innerText = 'Failed to book appointment.';
+        }
+      } catch (err) {
+        console.error('Error booking appointment:', err);
+        document.getElementById('formMessage').innerText = 'Error occurred. Try again.';
+      }
     }
 
-    // Close modal when clicking outside the modal content
+    // Close modal when clicking outside
     window.onclick = function(event) {
       const modal = document.getElementById('appointmentModal');
       if (event.target === modal) {
@@ -165,7 +160,8 @@
       }
     };
 
-    displayDoctors();
+    // Initial load
+    fetchDoctors();
   </script>
 
 </body>

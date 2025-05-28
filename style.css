@@ -356,8 +356,7 @@ section h2 {
 }
 
 .doctor-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  display: flex; 
   gap: 2rem;
 }
 

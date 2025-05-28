@@ -140,6 +140,7 @@ app.delete('/api/emergencies/:id', async (req, res) => {
 });
 
 // 6) Serve your static UI
-app.use(express.static(path.join(__dirname)));
+// app.use(express.static(path.join(__dirname)));
+app.use('/', express.static(path.join(__dirname)));
 
 app.listen(PORT, ()=>console.log(`Server running on http://localhost:${PORT}`));

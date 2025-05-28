@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard - HospEase</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -11,9 +12,11 @@
       display: none;
       position: fixed;
       z-index: 1000;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
       justify-content: center;
       align-items: center;
     }
@@ -28,11 +31,13 @@
       gap: 10px;
     }
 
-    .modal-content input, .modal-content button {
+    .modal-content input,
+    .modal-content button {
       padding: 8px;
     }
   </style>
 </head>
+
 <body>
 
   <!-- Navbar -->
@@ -161,27 +166,76 @@
 
     <div class="table-container" id="patientsTableContainer">
       <h3>Patients</h3>
-      <table id="patientsTable"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Disease</th></tr></thead><tbody></tbody></table>
+      <table id="patientsTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Disease</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
 
     <div class="table-container" id="doctorsTableContainer">
       <h3>Doctors</h3>
-      <table id="doctorsTable"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Specialty</th></tr></thead><tbody></tbody></table>
+      <table id="doctorsTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Specialty</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
 
     <div class="table-container" id="appointmentsTableContainer">
       <h3>Appointments</h3>
-      <table id="appointmentsTable"><thead><tr><th>Patient</th><th>Email</th><th>Doctor ID</th><th>Time</th></tr></thead><tbody></tbody></table>
+      <table id="appointmentsTable">
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Email</th>
+            <!-- <th>Doctor ID</th> -->
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
 
     <div class="table-container" id="staffTableContainer">
       <h3>Staff</h3>
-      <table id="staffTable"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Role</th></tr></thead><tbody></tbody></table>
+      <table id="staffTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
 
     <div class="table-container" id="emergencyTableContainer">
       <h3>Emergencies</h3>
-      <table id="emergencyTable"><thead><tr><th>Case ID</th><th>Patient</th><th>Type</th></tr></thead><tbody></tbody></table>
+      <table id="emergencyTable">
+        <thead>
+          <tr>
+            <th>Case ID</th>
+            <th>Patient</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
   </section>
 
@@ -223,7 +277,7 @@
       };
       await fetch(base + '/api/patients', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       });
       alert('Patient added');
@@ -243,7 +297,7 @@
       };
       await fetch(base + '/api/doctors', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       });
       alert('Doctor added');
@@ -262,7 +316,7 @@
       };
       await fetch(base + '/api/appointments', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       });
       alert('Appointment created');
@@ -281,7 +335,7 @@
       };
       await fetch(base + '/api/staff', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       });
       alert('Staff added');
@@ -299,7 +353,7 @@
       };
       await fetch(base + '/api/emergencies', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       });
       alert('Emergency logged');
@@ -311,11 +365,11 @@
     window.onload = loadTables;
 
     function loadTables() {
-      loadTable('patients', 'patientsTable', ['name','email','phone','disease']);
-      loadTable('doctors', 'doctorsTable', ['name','email','phone','specialty']);
-      loadTable('appointments', 'appointmentsTable', ['patientName','patientEmail','doctorId','time']);
-      loadTable('staff', 'staffTable', ['name','email','phone','role']);
-      loadTable('emergencies', 'emergencyTable', ['caseId','patientName','type']);
+      loadTable('patients', 'patientsTable', ['name', 'email', 'phone', 'disease']);
+      loadTable('doctors', 'doctorsTable', ['name', 'email', 'phone', 'specialty']);
+      loadTable('appointments', 'appointmentsTable', ['patientName', 'patientEmail', 'time']);
+      loadTable('staff', 'staffTable', ['name', 'email', 'phone', 'role']);
+      loadTable('emergencies', 'emergencyTable', ['caseId', 'patientName', 'type']);
     }
 
     async function loadTable(endpoint, tableId, fields) {
@@ -336,4 +390,5 @@
   </script>
 
 </body>
+
 </html>

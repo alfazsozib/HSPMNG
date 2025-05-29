@@ -88,7 +88,7 @@
       doctors.forEach(doc => {
         container.innerHTML += `
           <div class="doctor-card">
-            <img src="${doc.photo || 'https://via.placeholder.com/150'}" alt="${doc.name}" class="doctor-photo" />
+            <img src="${doc.photo || './assets/images/doctor.png'}" alt="${doc.name}" class="doctor-photo" />
             <div class="doctor-name">${doc.name}</div>
             <div class="doctor-specialty">${doc.specialty}</div>
             <div class="doctor-contact">📧 ${doc.email}</div>

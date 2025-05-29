@@ -34,7 +34,7 @@ const Doctor = mongoose.model('Doctor', new mongoose.Schema({
 }));
 const Appointment = mongoose.model('Appointment', new mongoose.Schema({
   patientName:String, patientEmail:String,
-  doctorId:{ type: mongoose.Schema.Types.ObjectId, ref:'Doctor' },
+  // doctorId:{ type: mongoose.Schema.Types.ObjectId, ref:'Doctor' },
   time:Date, createdAt:{ type:Date, default:Date.now }
 }));
 const Staff = mongoose.model('Staff', new mongoose.Schema({
@@ -93,20 +93,14 @@ app.delete('/api/doctors/:id', async (req, res) => {
 });
 
 // Appointments
-app.get('/api/appointments',    async (req, res) => res.json(await Appointment.find().populate('doctorId')));
+app.get('/api/appointments',    async (req, res) => res.json(await Appointment.find()));
 
 // Fixed appointments POST route:
 app.post('/api/appointments', async (req, res) => {
-  const { patientName, patientEmail, doctorId, time } = req.body;
-
-  if (!mongoose.Types.ObjectId.isValid(doctorId)) {
-    return res.status(400).json({ success: false, message: 'Invalid doctorId' });
-  }
-
+  const { patientName, patientEmail, time } = req.body;
   const appt = new Appointment({
     patientName,
     patientEmail,
-    doctorId,
     time: new Date(time)
   });
 
